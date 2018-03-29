@@ -59,8 +59,8 @@
     ]
   },
   "dependencies": {
+    "formik": "^0.11.11",
     "glamor": "^2.20.25",
-    "glamorous": "^3.14.0",
     "prop-types": "^15.5.9",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",

@@ -2,27 +2,22 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router-dom'
 import PanelShell from 'Common/PanelShell'
+import ProgressBar from 'Common/ProgressBar'
 import Show from 'Common/Show'
-import {
-  Email,
-  Username,
-  Password,
-  Hooray
-} from './views'
+import { Email, Username, Password, Hooray } from './views'
 
-const VIEWS = {
-  EMAIL: 'EMAIL',
-  USERNAME: 'USERNAME',
-  PASSWORD: 'PASSWORD',
-  HOORAY: 'HOORAY'
-}
+const VIEWS = ['EMAIL', 'USERNAME', 'PASSWORD', 'HOORAY']
 
 class Onboarding extends Component {
+  static propTypes = {
+    history: PropTypes.object.isRequired
+  }
+
   state = {
     email: '',
     password: '',
     username: '',
-    view: VIEWS.EMAIL
+    view: 0
   }
 
   handleValueChange = key => ({ target }) => {
@@ -33,37 +28,40 @@ class Onboarding extends Component {
 
   updateView = view => () => this.setState({ view })
 
-  render() {
+  render () {
     const { email, password, username, view } = this.state
     const { history } = this.props
 
+    const percentProgress = view / VIEWS.length * 100
+
     return (
       <PanelShell>
-        <Show when={view === VIEWS.EMAIL}>
+        <ProgressBar percent={percentProgress} />
+        <Show when={view === 0}>
           <Email
-            next={this.updateView(VIEWS.USERNAME)}
+            next={this.updateView(1)}
             email={email}
             handleValueChange={this.handleValueChange('email')}
           />
         </Show>
-        <Show when={view === VIEWS.USERNAME}>
+        <Show when={view === 1}>
           <Username
-            previous={this.updateView(VIEWS.EMAIL)}
-            next={this.updateView(VIEWS.PASSWORD)}
+            previous={this.updateView(0)}
+            next={this.updateView(2)}
             email={email}
             username={username}
             handleValueChange={this.handleValueChange('username')}
           />
         </Show>
-        <Show when={view === VIEWS.PASSWORD}>
+        <Show when={view === 2}>
           <Password
-            previous={this.updateView(VIEWS.USERNAME)}
-            next={this.updateView(VIEWS.HOORAY)}
+            previous={this.updateView(1)}
+            next={this.updateView(3)}
             password={password}
             handleValueChange={this.handleValueChange('password')}
           />
         </Show>
-        <Show when={view === VIEWS.HOORAY}>
+        <Show when={view === 3}>
           <Hooray
             goToApp={() => {}}
             goToRecovery={() => history.push('/seed')}

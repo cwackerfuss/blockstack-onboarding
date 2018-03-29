@@ -1,29 +1,21 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import PanelShell from 'Common/PanelShell'
 import Show from 'Common/Show'
-import {
-  KeyInfo,
-  UnlockKey,
-  Key,
-  KeyConfirm,
-  KeyComplete,
-  RecoveryOptions
-} from './views'
+import { KeyInfo, UnlockKey, Key, KeyConfirm, KeyComplete } from './views'
 
-const VIEWS = {
-  KEY_INFO: 'KEY_INFO',
-  UNLOCK_KEY: 'UNLOCK_KEY',
-  KEY: 'KEY',
-  KEY_CONFIRM: 'KEY_CONFIRM',
-  KEY_COMPLETE: 'KEY_COMPLETE',
-  RECOVERY_OPTIONS: 'RECOVERY_OPTIONS'
-}
+const VIEWS = [
+  'KEY_INFO',
+  'UNLOCK_KEY',
+  'KEY',
+  'KEY_CONFIRM',
+  'KEY_COMPLETE',
+  'RECOVERY_OPTIONS'
+]
 
 export default class Seed extends Component {
   state = {
     password: '',
-    view: VIEWS.KEY_INFO
+    view: VIEWS[0]
   }
 
   handleValueChange = key => ({ target }) => {
@@ -34,40 +26,39 @@ export default class Seed extends Component {
 
   updateView = view => () => this.setState({ view })
 
-  render() {
+  render () {
     const { password, view } = this.state
 
     return (
       <PanelShell>
-        <Show when={view === VIEWS.KEY_INFO}>
+        <Show when={view === VIEWS[0]}>
           <KeyInfo
-            next={this.updateView(VIEWS.UNLOCK_KEY)}
+            next={this.updateView(VIEWS[1])}
             handleValueChange={this.handleValueChange('password')}
           />
         </Show>
-        <Show when={view === VIEWS.UNLOCK_KEY}>
+        <Show when={view === VIEWS[1]}>
           <UnlockKey
-            previous={this.updateView(VIEWS.KEY_INFO)}
-            next={this.updateView(VIEWS.KEY)}
+            previous={this.updateView(VIEWS[0])}
+            next={this.updateView(VIEWS[2])}
             password={password}
             handleValueChange={this.handleValueChange('password')}
           />
         </Show>
-        <Show when={view === VIEWS.KEY}>
+        <Show when={view === VIEWS[2]}>
           <Key
-            previous={this.updateView(VIEWS.UNLOCK_KEY)}
-            next={this.updateView(VIEWS.KEY_CONFIRM)}
+            previous={this.updateView(VIEWS[1])}
+            next={this.updateView(VIEWS[3])}
           />
         </Show>
-        <Show when={view === VIEWS.KEY_CONFIRM}>
+        <Show when={view === VIEWS[3]}>
           <KeyConfirm
-          previous={this.updateView(VIEWS.KEY)}
-            next={this.updateView(VIEWS.KEY_COMPLETE)}
+            previous={this.updateView(VIEWS[2])}
+            next={this.updateView(VIEWS[4])}
           />
         </Show>
-        <Show when={view === VIEWS.KEY_COMPLETE}>
-          <KeyComplete
-          />
+        <Show when={view === VIEWS[4]}>
+          <KeyComplete />
         </Show>
       </PanelShell>
     )
